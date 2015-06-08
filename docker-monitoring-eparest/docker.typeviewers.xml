@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TypeViewerSet xmlns="wily.typeviews" xmlns:its="http://www.w3.org/2005/11/its" namespace="wily.apm.docker" version="2.0">
+
+
+	<TypeViewer id="Docker Overview" supported-items-specifier="Docker" tab-order="0">
+    <Title its:translate="yes">Overview</Title>
+    
+    <Panel layout="BorderLayout">
+      
+      <MetricDataTable constraint="Center" show-bottom-graph="true">
+        <Title its:translate="yes">Container Details</Title>
+        
+        <Column content-type="LastPrefixSegment" relative-width="1" segment-offset="1">
+          <Title its:translate="yes">HostName</Title>
+          
+        </Column>
+		<Column content-type="LastPrefixSegment" relative-width="1" segment-offset="0">
+          <Title its:translate="yes">Container Name</Title>
+          
+        </Column>
+		
+		
+        <Column content-type="StringValue" relative-specifier="\|[^\|]*\|[^\|]*:Image" relative-width="1">
+          <Title its:translate="yes">Image Name</Title>
+          
+        </Column>
+		
+		 <Column content-type="StringValue" relative-specifier="\|[^\|]*\|[^\|]*:CPU % \(string\)" relative-width="1">
+          <Title its:translate="yes">CPU Utilization (%)</Title>
+          
+        </Column>
+		 <Column content-type="StringValue" relative-specifier="\|[^\|]*\|[^\|]*:Memory % \(string\)" relative-width="1">
+          <Title its:translate="yes">Memory Utilization (%)</Title>
+          
+        </Column>
+		
+		 <Column content-type="NumericalValue" danger-threshold="0" relative-specifier="\|[^\|]*\|[^\|]*:Errors Sent" relative-width="1">
+          <Title its:translate="yes">Errors Sent</Title>
+          
+        </Column>
+		
+		 <Column content-type="NumericalValue" danger-threshold="0" relative-specifier="\|[^\|]*\|[^\|]*:Dropped Packets during Sent" relative-width="1">
+          <Title its:translate="yes">Packets Dropped</Title>
+          
+        </Column>
+		
+		 <Column content-type="StringValue" relative-specifier="\|[^\|]*\|[^\|]*:Status" relative-width="1">
+          <Title its:translate="yes">Status</Title>
+          
+        </Column>
+		
+      </MetricDataTable>
+    </Panel>
+  </TypeViewer>
+  
+  <TypeViewer id="Docker Overview" supported-items-specifier="Docker\|[^\|]*\|[^\|]*" tab-order="0">
+    <Title its:translate="yes">Overview</Title>
+	<Panel layout="BorderLayout">
+	<Panel columns="1" constraint="North" layout="GridLayout" rows="6">
+	
+	  
+	  <LiveMetricValueLabel relative-metric=":Names">
+				<Title its:translate="yes">Container Name: </Title>
+		</LiveMetricValueLabel>
+      
+		<LiveMetricValueLabel relative-metric=":Id">
+				<Title its:translate="yes">Docker ID: </Title>
+		</LiveMetricValueLabel>
+		
+		
+		<LiveMetricValueLabel relative-metric=":Image">
+				<Title its:translate="yes">Image Name: </Title>
+		</LiveMetricValueLabel>
+		
+		<LiveMetricValueLabel relative-metric=":Command">
+				<Title its:translate="yes">Startup Command: </Title>
+		</LiveMetricValueLabel>
+		
+		<LiveMetricValueLabel relative-metric=":Memory (in MB)">
+				<Title its:translate="yes">Memory Usage (in MB): </Title>
+		</LiveMetricValueLabel>
+		<LiveMetricValueLabel relative-metric=":Status">
+				<Title its:translate="yes">Current Status: </Title>
+		</LiveMetricValueLabel>
+	</Panel>
+	
+	<!-- -->
+		  
+	  
+	  <Panel columns="2" constraint="Center" layout="GridLayout" rows="3">
+			<Graph relative-specifier=":CPU % \(rounded\)">
+			  <Title its:translate="yes">CPU Utilization (%)</Title>
+			  
+			</Graph>
+			<Graph relative-specifier=":Memory % \(rounded\)">
+			  <Title its:translate="yes">Memory Utilization (%)</Title>
+			  
+			</Graph>
+			<Graph relative-specifier=":Dropped Packets .*">
+			  <Title its:translate="yes">Dropped Packets</Title>
+			  
+			</Graph>
+			
+			<Graph relative-specifier=":Errors .*">
+			  <Title its:translate="yes">Errors</Title>
+			  
+			</Graph>
+			
+			<Graph relative-specifier=":Bytes (Sent|Received)">
+			  <Title its:translate="yes">Bytes Sent/Received</Title>
+			  
+			</Graph>
+			<Graph relative-specifier=":Packets (Sent|Received)">
+			  <Title its:translate="yes">Packets Sent/Received</Title>
+			  
+			</Graph>
+		</Panel>
+		
+	</Panel>
+	</TypeViewer>
+  
+  
+  <TypeViewer id="Docker Overview" supported-items-specifier="Docker\|[^\|]*" tab-order="0">
+    <Title its:translate="yes">Overview</Title>
+    
+    <Panel layout="BorderLayout">
+      <!--  <TabbedPane constraint="Center">
+            <Panel layout="BorderLayout" title="Overview"> -->
+      <Panel border="Etched" constraint="North" layout="GridLayout" rows="1">
+        <Panel layout="GridLayout" rows="2">
+			<LiveMetricValueLabel relative-metric=":Name">
+				<Title its:translate="yes">Host Name: </Title>
+			</LiveMetricValueLabel>
+			
+			 <LiveMetricValueLabel relative-metric=":DockerRootDir">
+				<Title its:translate="yes">Docker Root Directory: </Title>
+			</LiveMetricValueLabel>
+			
+			<LiveMetricValueLabel relative-metric=":KernelVersion">
+				<Title its:translate="yes">Kernel Version: </Title>
+			</LiveMetricValueLabel>
+			
+			<LiveMetricValueLabel relative-metric=":No of CPU">
+				<Title its:translate="yes">Total CPU: </Title>
+			</LiveMetricValueLabel>
+			
+			<LiveMetricValueLabel relative-metric=":OperatingSystem">
+				<Title its:translate="yes">OS: </Title>
+			</LiveMetricValueLabel>
+			
+			<LiveMetricValueLabel relative-metric=":Total Images">
+				<Title its:translate="yes">Total Images: </Title>
+			</LiveMetricValueLabel>
+			
+			<LiveMetricValueLabel relative-metric=":Total Container">
+				<Title its:translate="yes">Total Container: </Title>
+			</LiveMetricValueLabel>
+			<LiveMetricValueLabel relative-metric=":Total Memory">
+				<Title its:translate="yes">Total Memory (in MB): </Title>
+			</LiveMetricValueLabel>
+		</Panel>		
+      </Panel>
+	  <Panel layout="GridLayout" rows="2">
+      <MetricDataTable constraint="Center" show-bottom-graph="true">
+        <Title its:translate="yes">Container Details</Title>
+        
+        <Column content-type="LastPrefixSegment" relative-width="1" segment-offset="0">
+          <Title its:translate="yes">Container Name</Title>
+          
+        </Column>
+        <Column content-type="StringValue" relative-specifier="\|[^\|]*:Image" relative-width="1">
+          <Title its:translate="yes">Image Name</Title>
+          
+        </Column>
+		
+		 <Column content-type="StringValue" relative-specifier="\|[^\|]*:CPU % \(string\)" relative-width="1">
+          <Title its:translate="yes">CPU Utilization (%)</Title>
+          
+        </Column>
+		 <Column content-type="StringValue" relative-specifier="\|[^\|]*:Memory % \(string\)" relative-width="1">
+          <Title its:translate="yes">Memory Utilization (%)</Title>
+          
+        </Column>
+		
+		 <Column content-type="NumericalValue" danger-threshold="0" relative-specifier="\|[^\|]*:Errors Sent" relative-width="1">
+          <Title its:translate="yes">Errors Sent</Title>
+          
+        </Column>
+		
+		 <Column content-type="NumericalValue" danger-threshold="0" relative-specifier="\|[^\|]*:Dropped Packets during Sent" relative-width="1">
+          <Title its:translate="yes">Packets Dropped</Title>
+          
+        </Column>
+		
+		 <Column content-type="StringValue" relative-specifier="\|[^\|]*:Status" relative-width="1">
+          <Title its:translate="yes">Status</Title>
+          
+        </Column>
+		
+      </MetricDataTable>
+	  
+	  <Panel columns="2" constraint="Center" layout="GridLayout" rows="1">
+			<Graph relative-specifier="(:Data Space Total.*|:Data Space Used.*)">
+			  <Title its:translate="yes">Data Space Total vs Used (In GB)</Title>
+			  
+			</Graph>
+			<Graph relative-specifier="(:Running Container.*|:Stopped Container.*)">
+			  <Title its:translate="yes">Running vs Stopped Container</Title>
+			  
+			</Graph>
+		</Panel>
+		</Panel>
+		
+		
+    </Panel>
+  </TypeViewer>
+</TypeViewerSet>
