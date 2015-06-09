@@ -1,9 +1,8 @@
 # Field Pack Name (Version)
-*__NOTE TO CONTRIBUTORS:__ Items marked in italics provide how-to guidance in creating this file.  These comments should be removed once proper content has been added.  Other non-italicized text should remain in this file as boilerplate text.*
-
+Docker Monitoring 1.0
 
 # Description
-*Provide a short description of the field pack here. See [Markdown Basics](https://help.github.com/articles/markdown-basics/) for markdown syntax.*
+Docker Monitoring fieldpack allows you to monitor the docker infrastructure after providing the hostname and port number on which the docker apps are running. 
 
 *__NOTE TO CONTRIBUTORS:__ Projects are designed to be self documenting in this README file.  Rich text (including screenshots) can be  found inside the projects themselves (as committed assets).  Generally a project overview (including description, sample screenshots, etc.) can be found on the project wiki page at `http://github.com/ca-apm/<repo_name>/wiki`.* 
 
@@ -79,4 +78,4 @@ Changes for each version of the field pack.
 
 Version | Author | Comment
 --------|--------|--------
-1.0 | Your name | First version of the field pack.
+1.0 | Abhijit Bhadra | First version of the field pack.
