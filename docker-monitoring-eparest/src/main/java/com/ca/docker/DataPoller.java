@@ -130,13 +130,14 @@ public class DataPoller
     }
 
     /**
-     * Deliver the metrics
+     * This methos is responsible on delivering the metrics from
+     * MetricFreeBundle
      * 
      * @param mfb
      * @throws Exception
      */
 
-    public void deliverMetrics(final MetricFeedBundle mfb) throws Exception
+    private void deliverMetrics(final MetricFeedBundle mfb) throws Exception
     {
         final String json = mfb.toString();
         final HttpURLConnection conn = (HttpURLConnection) dockerMonitor
@@ -181,7 +182,7 @@ public class DataPoller
      * @return
      * @throws Exception
      */
-    public MetricFeedBundle makeMetrics(final Object hci, String additionalPath)
+    private MetricFeedBundle makeMetrics(final Object hci, String additionalPath)
         throws Exception
     {
         String basePath = null;
@@ -220,6 +221,15 @@ public class DataPoller
 
     }
 
+    /**
+     * Isolate metric types. In case of Double, we will be printing a String
+     * metrics as well as float metrics This is done because some of the %
+     * calcualted metrics can make more sense with two precesion levels
+     * 
+     * @param metricPath
+     * @param dataObj
+     * @param mfb
+     */
     private void makeMetric(final String metricPath,
                             final Object dataObj,
                             final MetricFeedBundle mfb)
@@ -263,6 +273,13 @@ public class DataPoller
         }
     }
 
+    /**
+     * Reads the json data from dockerHostInfo String and populate this to
+     * HostInfo object
+     * 
+     * @param dockerHostInfo
+     * @return
+     */
     private HostInfo readHostInfoJsonFromUrl(String dockerHostInfo)
     {
         // TODO Auto-generated method stub
@@ -288,6 +305,8 @@ public class DataPoller
     }
 
     /**
+     * Read Containers information and store it under Arraylist of Container.
+     * This also calculates/determine up/down container
      * 
      * @param relativePath
      * @return an ArrayList of Containers
@@ -334,6 +353,12 @@ public class DataPoller
 
     }
 
+    /**
+     * Populate the container raw data inside ContainerStatInfo
+     * 
+     * @param id
+     * @param names
+     */
     private void resetContainerResourceStats(String id, String names)
     {
         // TODO Auto-generated method stub
@@ -372,6 +397,12 @@ public class DataPoller
         readStatInfoJsonFromUrl(resourcePath, names);
     }
 
+    /**
+     * Read container Stat information
+     * 
+     * @param resourcePath
+     * @param names
+     */
     private void readStatInfoJsonFromUrl(String resourcePath, String names)
     {
         try
@@ -382,8 +413,8 @@ public class DataPoller
             ContainerStatInfo csi = new ContainerStatInfo();
             csi.setCpupercentage(this.getCPUPercentage(node, names));
             csi.setMemorypercentage(this.getMemoryPercentage(node, names));
-            csi.setMemporyUsage(this.getMemoryUsage(node));
-            csi.setTotalMemory(this.getTotalMemory(node));
+            csi.setMemporyUsage(this.getMemoryData(node, "usage"));
+            csi.setTotalMemory(this.getMemoryData(node, "limit"));
             csi.setNetworkData(getNetWorkData(node));
 
             csi.populateMetricData(csi);
@@ -401,6 +432,12 @@ public class DataPoller
         return;
     }
 
+    /**
+     * Extract data related to Network
+     * 
+     * @param node
+     * @return
+     */
     private NetworkStatInfo getNetWorkData(JsonNode node)
     {
         // TODO Auto-generated method stub
@@ -442,30 +479,33 @@ public class DataPoller
         return null;
     }
 
-    private Long getTotalMemory(JsonNode node)
-    {
-        JsonNode stats = node.get("memory_stats");
-        if (stats != null)
-        {
-            Long limit = ((Double) getValue("limit", stats)).longValue();
+    /**
+     * Extract Memory informtaion from Json node based on attr in MB
+     * 
+     * @param node
+     * @param attr
+     * @return
+     */
 
-            return limit / 1000000;
-        }
-        return null;
-    }
-
-    private Long getMemoryUsage(JsonNode node)
+    private Long getMemoryData(JsonNode node, String attr)
     {
 
         JsonNode stats = node.get("memory_stats");
         if (stats != null)
         {
-            Long usage = ((Double) getValue("usage", stats)).longValue();
-            return usage / 1000000;
+            Long usage = ((Double) getValue(attr, stats)).longValue();
+            return usage / (1024 * 1024);
         }
         return null;
     }
 
+    /**
+     * This calculates the CPU Utilization (%)
+     * 
+     * @param node
+     * @param containerName
+     * @return
+     */
     private Double getCPUPercentage(JsonNode node, String containerName)
     {
 
@@ -574,6 +614,15 @@ public class DataPoller
         return null;
     }
 
+    /**
+     * In case of stats query, readfully is set to false as we just want to read
+     * that snapshot data and don't want to read the entire content
+     * 
+     * @param urlString
+     * @param readfully
+     * @return
+     * @throws Exception
+     */
     private String readUrl(String urlString, Boolean readfully)
         throws Exception
     {
