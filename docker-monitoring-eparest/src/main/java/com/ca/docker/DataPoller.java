@@ -4,23 +4,15 @@
 package com.ca.docker;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +28,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
@@ -216,21 +207,15 @@ public class DataPoller
      */
     private void makeMetrics(MetricFeedBundle mfb, String basePath, Object hci)
     {
-
-        // TODO Auto-generated method stub
-        // if (hci instanceof HostInfo)
+        Iterator<?> it = ((DockerInfo) hci).getDockerInfo().entrySet()
+                .iterator();
+        while (it.hasNext())
         {
-            Iterator<?> it = ((DockerInfo) hci).getDockerInfo().entrySet()
-                    .iterator();
-            while (it.hasNext())
-            {
-                final MetricPath metricPath = new MetricPath(basePath);
-                Map.Entry pair = (Map.Entry) it.next();
-                metricPath.addMetric((String) pair.getKey());
-                makeMetric(metricPath.toString(), pair.getValue(), mfb);
-                it.remove();
-            }
-            // makeMetric(metricPath.toString(), o, mfb);
+            final MetricPath metricPath = new MetricPath(basePath);
+            Map.Entry pair = (Map.Entry) it.next();
+            metricPath.addMetric((String) pair.getKey());
+            makeMetric(metricPath.toString(), pair.getValue(), mfb);
+            it.remove();
         }
 
     }
@@ -519,13 +504,15 @@ public class DataPoller
 
         return null;
     }
+
     /**
      * This returns the percentage of 2 numbers upto 3 decimals
+     * 
      * @param d1
      * @param d2
      * @return
      */
-     private static Double percentage(Double d1, Double d2)
+    private static Double percentage(Double d1, Double d2)
     {
         DecimalFormat df = new DecimalFormat();
         Double numerator = new Double(d1) * 100;
@@ -536,7 +523,8 @@ public class DataPoller
     }
 
     /**
-     * Identify the memory utilization percentage 
+     * Identify the memory utilization percentage
+     * 
      * @param node
      * @param names
      * @return
