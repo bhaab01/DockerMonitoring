@@ -44,7 +44,7 @@ public class DataPoller
 
     private MetricFeedBundle      mfb;
 
-    private Cache<String, Double> previousMetricsMap;
+    private Cache<String, Double> oldMetricsMap;
 
     private static int            upContainer;
 
@@ -65,7 +65,7 @@ public class DataPoller
         dockerMonitor = dm;
         logger = DockerMonitor.getLogger();
 
-        previousMetricsMap = CacheBuilder.newBuilder()
+        oldMetricsMap = CacheBuilder.newBuilder()
                 .expireAfterWrite(10, TimeUnit.MINUTES).build();
         ScheduledExecutorService ses = new ScheduledThreadPoolExecutor(1);
         ses.scheduleAtFixedRate(this, 0, dm.getCollectionInterval(),
@@ -523,17 +523,22 @@ public class DataPoller
     {
 
         JsonNode stats = node.get("cpu_stats");
-        JsonNode cpuUsage;
-        if (stats != null && (cpuUsage = stats.get("cpu_usage")) != null)
+        JsonNode cpuUsage = stats.get("cpu_usage");
+        if (stats != null && cpuUsage != null)
         {
             Double totalUsage = (Double) getValue("total_usage", cpuUsage);
             Double systemUsage = (Double) getValue("system_cpu_usage", stats);
-            String totalUsageCacheKey = containerName + "|total_usage";
-            String systemUsageCacheKey = containerName + "|system_cpu_usage";
-            Double prevTotalUsage = previousMetricsMap
-                    .getIfPresent(totalUsageCacheKey);
-            Double prevSystemUsage = previousMetricsMap
-                    .getIfPresent(systemUsageCacheKey);
+            StringBuilder totalUsageKey = new StringBuilder(containerName);
+            totalUsageKey.append(Constants.PIPE);
+            totalUsageKey.append("total_usage");
+            StringBuilder systemUsageKey = new StringBuilder(containerName);
+            systemUsageKey.append(Constants.PIPE);
+            systemUsageKey.append("system_cpu_usage");
+            
+            Double prevTotalUsage = oldMetricsMap
+                    .getIfPresent(totalUsageKey.toString());
+            Double prevSystemUsage = oldMetricsMap
+                    .getIfPresent(systemUsageKey);
             if (prevSystemUsage != null && prevTotalUsage != null
                 && totalUsage != null && systemUsage != null)
             {
@@ -550,8 +555,8 @@ public class DataPoller
             }
             if (totalUsage != null && systemUsage != null)
             {
-                previousMetricsMap.put(totalUsageCacheKey, totalUsage);
-                previousMetricsMap.put(systemUsageCacheKey, systemUsage);
+                oldMetricsMap.put(totalUsageKey.toString(), totalUsage);
+                oldMetricsMap.put(systemUsageKey.toString(), systemUsage);
             }
         }
 
