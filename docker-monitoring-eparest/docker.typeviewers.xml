@@ -128,13 +128,14 @@
             <Panel layout="BorderLayout" title="Overview"> -->
       <Panel border="Etched" constraint="North" layout="GridLayout" rows="1">
         <Panel layout="GridLayout" rows="2">
+			<LiveMetricValueLabel relative-metric=":Last Update Time">
+				<Title its:translate="yes">Last Update Time: </Title>
+			</LiveMetricValueLabel>
 			<LiveMetricValueLabel relative-metric=":Name">
 				<Title its:translate="yes">Host Name: </Title>
 			</LiveMetricValueLabel>
 			
-			 <LiveMetricValueLabel relative-metric=":DockerRootDir">
-				<Title its:translate="yes">Docker Root Directory: </Title>
-			</LiveMetricValueLabel>
+			
 			
 			<LiveMetricValueLabel relative-metric=":KernelVersion">
 				<Title its:translate="yes">Kernel Version: </Title>
@@ -158,6 +159,7 @@
 			<LiveMetricValueLabel relative-metric=":Total Memory">
 				<Title its:translate="yes">Total Memory (in MB): </Title>
 			</LiveMetricValueLabel>
+			
 		</Panel>		
       </Panel>
 	  <Panel layout="GridLayout" rows="2">

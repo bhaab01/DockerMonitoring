@@ -67,13 +67,12 @@ public class HostInfo
 
     private HashMap<String, Comparable<?>> hostInfo;
     
-    private int upContainer;
-    private int downContainer;
     
-    public void updateContainerInfo(int a, int b)
+    public void updateContainerInfo(int a, int b, String lastUpdateTime)
     {
         hostInfo.put("Running Container", a);
         hostInfo.put("Stopped Container", b);  
+        hostInfo.put("Last Update Time", (String)lastUpdateTime);
     }
 
     public void populateMetricData(HostInfo c)

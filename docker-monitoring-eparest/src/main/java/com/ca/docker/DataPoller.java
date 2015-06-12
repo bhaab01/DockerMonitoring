@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -342,7 +343,7 @@ public class DataPoller
                 lcs.add(cse);
             }
             // Containers page = gson.fromJson(json, Containers.class);
-            hostInfo.updateContainerInfo(upContainer, downContainer);
+            hostInfo.updateContainerInfo(upContainer, downContainer, getCurrentTime());
             return lcs;
         } catch (Exception e)
         {
@@ -351,6 +352,18 @@ public class DataPoller
         }
         return null;
 
+    }
+/**
+ * 
+ * @return a String showing current local time 
+ */
+    private String getCurrentTime()
+    {
+        // TODO Auto-generated method stub
+        Date date = new Date();
+        SimpleDateFormat sdf;
+        sdf = new SimpleDateFormat("dd MMM yyyy hh:mm:ss a zzz");
+        return sdf.format(date);
     }
 
     /**
