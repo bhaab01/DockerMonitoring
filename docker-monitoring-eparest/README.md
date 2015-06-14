@@ -29,8 +29,11 @@ file in this repository.  Licenses may vary by repository.  Your download and us
 
 # Installation Instructions
 Install, configure and run an EPAgent on the same or a remote server. See CA APM Environment Performance Agent Implementation Guide. 
+
 Unzip the binaries located at https://cawiki.ca.com/download/attachments/727271081/EPADocker.zip
+
 Provide necessary input under docker.properties
+
 Copy docker.typeviewers.xml to your Enterprise Manager (MOM) <EM_HOME>/ext/xmltv.
 
 ## Prerequisites
@@ -48,7 +51,7 @@ Run startDockerMonitor.bat
 # Usage Instructions
 
 
-## Metric description
+## Metric description ( To be Updated )
 
 
 ## Custom Management Modules
