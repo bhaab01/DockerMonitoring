@@ -20,6 +20,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.BooleanNode;
@@ -284,10 +291,13 @@ public class DataPoller
     private HostInfo readHostInfoJsonFromUrl(String dockerHostInfo)
     {
         // TODO Auto-generated method stub
-
+        String json;
         try
         {
-            String json = readUrl(dockerHostInfo, true);
+            if (DockerMonitor.sslEnabled)
+                json = readHttpsUrl(dockerHostInfo, true);
+            else
+                json = readUrl(dockerHostInfo, true);
 
             Gson gson = new Gson();
             HostInfo hostInfo = gson.fromJson(json, HostInfo.class);
@@ -319,7 +329,10 @@ public class DataPoller
         String json;
         try
         {
-            json = readUrl(relativePath, true);
+            if (DockerMonitor.sslEnabled)
+                json = readHttpsUrl(relativePath, true);
+            else
+                json = readUrl(relativePath, true);
             Gson gson = new Gson();
             JsonParser parser = new JsonParser();
             JsonArray jArray = parser.parse(json).getAsJsonArray();
@@ -343,7 +356,8 @@ public class DataPoller
                 lcs.add(cse);
             }
             // Containers page = gson.fromJson(json, Containers.class);
-            hostInfo.updateContainerInfo(upContainer, downContainer, getCurrentTime());
+            hostInfo.updateContainerInfo(upContainer, downContainer,
+                                         getCurrentTime());
             return lcs;
         } catch (Exception e)
         {
@@ -353,10 +367,11 @@ public class DataPoller
         return null;
 
     }
-/**
- * 
- * @return a String showing current local time 
- */
+
+    /**
+     * 
+     * @return a String showing current local time
+     */
     private String getCurrentTime()
     {
         // TODO Auto-generated method stub
@@ -418,9 +433,14 @@ public class DataPoller
      */
     private void readStatInfoJsonFromUrl(String resourcePath, String names)
     {
+        String json = null;
         try
         {
-            String json = readUrl(resourcePath, false);
+            if (DockerMonitor.sslEnabled)
+                json = readHttpsUrl(resourcePath, false);
+            else
+                json = readUrl(resourcePath, false);
+            // String json = readUrl(resourcePath, false);
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode node = objectMapper.readValue(json, JsonNode.class);
             ContainerStatInfo csi = new ContainerStatInfo();
@@ -534,11 +554,11 @@ public class DataPoller
             StringBuilder systemUsageKey = new StringBuilder(containerName);
             systemUsageKey.append(Constants.PIPE);
             systemUsageKey.append("system_cpu_usage");
-            
-            Double prevTotalUsage = oldMetricsMap
-                    .getIfPresent(totalUsageKey.toString());
-            Double prevSystemUsage = oldMetricsMap
-                    .getIfPresent(systemUsageKey);
+
+            Double prevTotalUsage = oldMetricsMap.getIfPresent(totalUsageKey
+                    .toString());
+            Double prevSystemUsage = oldMetricsMap.getIfPresent(systemUsageKey
+                    .toString());
             if (prevSystemUsage != null && prevTotalUsage != null
                 && totalUsage != null && systemUsage != null)
             {
@@ -668,6 +688,65 @@ public class DataPoller
         } finally
         {
             if (reader != null) reader.close();
+        }
+    }
+
+    /**
+     * In case of stats query, readfully is set to false as we just want to read
+     * that snapshot data and don't want to read the entire content
+     * 
+     * @param urlString
+     * @param readfully
+     * @return
+     * @throws Exception
+     */
+    private String readHttpsUrl(String urlString, Boolean readfully)
+        throws Exception
+    {
+        PoolingHttpClientConnectionManager c1Manager = new PoolingHttpClientConnectionManager(
+                                                                                              DockerMonitor
+                                                                                                      .getSchemeRegistry(DockerMonitor.certificate));
+        HttpClient httpClient = HttpClients.custom()
+                .setConnectionManager(c1Manager).build();
+        StringBuffer sb = new StringBuffer(this.getDockerMonitor()
+                .getDockerUrl());
+        sb.append(urlString);
+
+        HttpGet request = new HttpGet(sb.toString());
+        HttpResponse response = httpClient.execute(request);
+
+        BufferedReader reader = null;
+        HttpEntity entity = response.getEntity();
+
+        InputStream in = entity.getContent();
+        InputStreamReader inr = new InputStreamReader(in);
+        try
+        {
+            reader = new BufferedReader(inr);
+            String strLine;
+
+            if (!readfully)
+            {
+                return reader.readLine();
+            }
+            StringBuffer buffer = new StringBuffer();
+            int read;
+            char[] chars = new char[1024];
+            while ((read = reader.read(chars)) != -1)
+                buffer.append(chars, 0, read);
+
+            return buffer.toString();
+
+        } finally
+        {
+            if (reader != null)
+
+            {
+                if (null != entity) entity.consumeContent();
+
+                httpClient.getConnectionManager().shutdown();
+
+            }
         }
     }
 }

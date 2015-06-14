@@ -12,23 +12,47 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+
 public class DockerMonitor
 {
-    private static Logger logger;
+    private static Logger  logger;
 
-    private Properties    props;
+    private Properties     props;
 
-    private String        dockerHost;
+    private String         dockerHost;
 
-    private int           dockerPort;
+    private int            dockerPort;
 
-    private String        dockerUrl;
+    private String         dockerUrl;
 
-    private URL           apmUrl;
+    private URL            apmUrl;
 
-    private int           collectionInterval;
+    private int            collectionInterval;
 
-    public DockerMonitor(final Properties inProps)
+    private String         caCertificate;
+
+    private String         clientCertificate;
+
+    private String         clientKey;
+
+    private String         keystorePassword;
+
+    public static boolean sslEnabled = false;
+    
+    public static DockerCertificates certificate;
+
+    public DockerMonitor(final Properties inProps) throws Exception
     {
         props = inProps;
         processProperties();
@@ -58,11 +82,11 @@ public class DockerMonitor
                                      + ". \nIt is possible to make the Docker daemon to listen on a specific IP and port by running -H option. \nFor more information, go to https://docs.docker.com/articles/basics/#bind-docker-to-another-hostport-or-a-unix-socket");
                 }
             }
-            if ( collectionInterval > 0)
+            if (collectionInterval > 0)
             {
                 new DataPoller(this);
             }
-            
+
             /*
              * topology = new StandaloneMongod(props, host, port, logger);
              * topology.discoverServers("Standalone");
@@ -76,24 +100,88 @@ public class DockerMonitor
 
     }
 
-    private void processProperties()
+    private void processProperties() throws Exception
     {
         dockerHost = getStringProp(Constants.DOCKER_HOST_PROP);
         dockerPort = getIntProp(Constants.DOCKER_PORT_PROP);
-        setDockerUrl();
         setInterval();
         setApmUrl();
+        readCertificateEntry();
+        if (sslEnabled)
+        {
+            DockerCertificates dockerCerificate = new DockerCertificates(
+                                                                         caCertificate,
+                                                                         clientCertificate,
+                                                                         clientKey,
+                                                                         keystorePassword);
+            setDockerCertificates(dockerCerificate);
+            
+            
+        }
+        setDockerUrl();
+
+    }
+
+    public void setDockerCertificates(DockerCertificates dockerCerificate)
+    {
+        // TODO Auto-generated method stub
+        certificate = dockerCerificate;
+        
+    }
+
+    
+    
+    private void readCertificateEntry()
+    {
+        // TODO Auto-generated method stub
+        caCertificate = getStringProp1(Constants.DOCKER_CA_KEY, props);
+        clientCertificate = getStringProp1(Constants.DOCKER_CLIENT_CERTIFIACTE, props);
+        clientKey = getStringProp1(Constants.DOCKER_CLIENT_KEY, props);
+        if (caCertificate != null && !caCertificate.equals("")
+            && clientCertificate != null && !clientCertificate.equals("")
+            && clientKey != null && !clientKey.equals(""))
+        {
+            sslEnabled = true;
+        }
+        keystorePassword = getStringProp1(Constants.DOCKER_KEYSTORE_PASSWORD, props);
     }
 
     private void setDockerUrl()
     {
         try
         {
-            dockerUrl = String.format("http://%s:%d", dockerHost, dockerPort);
+            String protocol;
+            if (sslEnabled)
+                protocol = Constants.HTTPS;
+            else
+                protocol = Constants.HTTP;
+            dockerUrl = String.format("%s%s:%d", protocol, dockerHost,
+                                      dockerPort);
         } catch (Exception ex)
         {
             throw new RuntimeException("Can't initialize Docker API URL", ex);
         }
+    }
+
+    public static Registry<ConnectionSocketFactory> getSchemeRegistry(final DockerCertificates dc)
+    {
+        final SSLConnectionSocketFactory https;
+        if (dc == null)
+        {
+            https = SSLConnectionSocketFactory.getSocketFactory();
+        } else
+        {
+            https = new SSLConnectionSocketFactory(dc.sslContext(),
+                                                   dc.hostnameVerifier());
+        }
+
+        final RegistryBuilder registryBuilder = RegistryBuilder
+                .<ConnectionSocketFactory> create()
+                .register("https", https)
+                .register("http",
+                          PlainConnectionSocketFactory.getSocketFactory());
+
+        return registryBuilder.build();
     }
 
     public static void main(String[] args)
@@ -134,8 +222,6 @@ public class DockerMonitor
 
     }
 
-
-
     private String getStringProp(final String pname)
     {
         return getStringProp(pname, props);
@@ -153,6 +239,14 @@ public class DockerMonitor
         return ret;
     }
 
+    public static String getStringProp1(final String pname, final Properties p)
+    {
+        final String ret = p.getProperty(pname);
+       
+        return ret;
+    }
+
+    
     private static boolean isEmpty(final String s)
     {
         return (s == null || "".equals(s.trim()));
@@ -242,7 +336,10 @@ public class DockerMonitor
 
         StringBuffer sb = new StringBuffer(dockerUrl);
         sb.append(Constants.DOCKER_CONTAINER_INFO);
-
+        PoolingHttpClientConnectionManager cManager = new PoolingHttpClientConnectionManager(
+                                                                                              getSchemeRegistry(certificate));
+        if (sb.toString().startsWith("https"))
+            return checkHttpsConnection(cManager, sb.toString());
         try
         {
             URL url = new URL(sb.toString());
@@ -275,6 +372,31 @@ public class DockerMonitor
 
         return true;
 
+    }
+
+    private boolean checkHttpsConnection(PoolingHttpClientConnectionManager cManager, String uri) 
+    {
+        // TODO Auto-generated method stub
+        CloseableHttpClient httpClient = HttpClients.custom()
+                .setConnectionManager(cManager)
+                .build();
+        
+        HttpGet request = new HttpGet(uri);
+        try
+        {
+            HttpResponse response = httpClient.execute(request);
+            if (response.getStatusLine().getStatusCode() != 200) return false;
+        } catch (ClientProtocolException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        return true;
     }
 
 }
