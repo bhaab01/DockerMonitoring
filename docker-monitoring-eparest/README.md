@@ -38,14 +38,16 @@ Copy docker.typeviewers.xml to your Enterprise Manager (MOM) <EM_HOME>/ext/xmltv
 
 ## Prerequisites
 Docker Application needs to be started with -H parameter so that it can bind Docker to another host/port or a Unix socket ( both http and https ) 
+
 For eg.
+
 	 docker -d --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem -H=0.0.0.0:2376
 
 ## Dependencies
 APM EPAgent version 9.7.1 and above
 
 ## Configuration
-Make sure java path is set and pointing to 1.7 and above 
+Make sure java path is set and pointing to 1.7 and above
 Run startDockerMonitor.bat
 
 # Usage Instructions
@@ -58,7 +60,7 @@ Run startDockerMonitor.bat
 Nothing is provided OOB
 
 ## Custom type viewers
-A custom typeview is supplied with the project. For more screenshots, look at "screenshots.docx" 
+A custom typeview is supplied with the project. 
 
 ## Debugging and Troubleshooting
 
