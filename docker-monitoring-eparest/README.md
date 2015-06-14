@@ -45,6 +45,7 @@ For eg.
 
 ## Dependencies
 APM EPAgent version 9.7.1 and above
+Docker Server API version: 1.17
 
 ## Configuration
 Make sure java path is set and pointing to 1.7 and above
