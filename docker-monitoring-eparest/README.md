@@ -18,9 +18,11 @@ Docker Server API version 1.17 and above
 ## Limitations
 No limitation
 
-## License ( Need to update this section properly )
+## License ( To be updated )
 Apache 2.0 licenses
-BouncyCastle - http://techstack.ca.com/techstack-web/content/tpsr/detail.jsp?tpsrId=00000087_19
+
+BouncyCastle - Already approved in techstack http://techstack.ca.com/techstack-web/content/tpsr/detail.jsp?tpsrId=00000087_19
+
 Please review the 
 **LICENSE**
 file in this repository.  Licenses may vary by repository.  Your download and use of this software constitutes your agreement to this license.
@@ -77,5 +79,5 @@ Changes for each version of the field pack.
 
 Version | Author | Comment
 --------|--------|--------
-1.0 | Abhijit Bhadra | Added support for https
+1.1 | Abhijit Bhadra | Added support for https
 1.0 | Abhijit Bhadra | First version of the field pack.
