@@ -13,6 +13,7 @@ APM 9.7.1 and above
 
 ## Supported third party versions
 Java 1.7 and above
+
 Docker Server API version 1.17 and above
 
 ## Limitations
