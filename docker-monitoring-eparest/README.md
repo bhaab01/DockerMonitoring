@@ -1,63 +1,62 @@
 # Field Pack Name (Version)
-Docker Monitoring 1.0
+Docker Monitoring
 
 # Description
 Docker Monitoring fieldpack allows you to monitor the docker infrastructure after providing the hostname and port number on which the docker apps are running. 
-
-*__NOTE TO CONTRIBUTORS:__ Projects are designed to be self documenting in this README file.  Rich text (including screenshots) can be  found inside the projects themselves (as committed assets).  Generally a project overview (including description, sample screenshots, etc.) can be found on the project wiki page at `http://github.com/ca-apm/<repo_name>/wiki`.* 
+A project overview (including description, sample screenshots, etc.) can be found on the project wiki page at https://cawiki.ca.com/display/APMFIELDPACKS/Docker+Monitoring 
 
 ## Releases
 From time to time, projects may make compiled releases available.  While source code is always available for complete build, releases serve as a "tag" (numbered release) and often contain prepared packages that are prebuilt and ready to use.  Visit `http://github.com/ca-apm/<repo_name>/releases` for details.
 
 ## APM version
-*APM EM and agent versions the field pack has been tested with.*
+APM 9.7.1 and above
 
 ## Supported third party versions
-*Third party versions tested with.*
+Java 1.7 and above
+Docker Server API version 1.17 and above
 
 ## Limitations
-*What the field pack will not do.*
+No limitation
 
-## License
-*Link to the license under which this field pack is provided. See [Licensing](https://communities.ca.com/docs/DOC-231150910#license) on the CA APM Developer Community.*
-
+## License ( Need to update this section properly )
+Apache 2.0 licenses
+BouncyCastle - http://techstack.ca.com/techstack-web/content/tpsr/detail.jsp?tpsrId=00000087_19
 Please review the 
 **LICENSE**
 file in this repository.  Licenses may vary by repository.  Your download and use of this software constitutes your agreement to this license.
 
 # Installation Instructions
-*How to install the field pack.*
+Install, configure and run an EPAgent on the same or a remote server. See CA APM Environment Performance Agent Implementation Guide. (https://samlgwsm.ca.com/affwebservices/public/saml2sso?SAMLRequest=fZDLboMwEEV%2FxZo9GFBIKwuIUKNKSOkmjy66c1yHWAWbemzo55eAkOimS2t85s492e6nbUgvLSqj%0Ac4jDCIjUwnwqXedwOb8Gz7ArMuRt07HSu7s%2Bym8v0ZGR08imQQ7eamY4KmSatxKZE%2BxUvh1YEkas%0As8YZYRogJaK0bgx6MRp9K%2B1J2l4JeTkecrg71yGjdFBfKhQ8FKalXeNrpZGOWN9IRx9pQPZjvNLc%0ATRcv2GNUD9guKL%2FdBnnFOQBp56%2BNEtOvBNEAqfY5jF0rRC8rjY5rl0MSxWkQbYN4c45jFj%2BxdBsm%0Am%2FQDyPtiaGwEsw82sXYl4n8PfGkPxapjRle7ivn113TxCw%3D%3D&RelayState=%2Fdisplay%2FAPMDEVOPS97%2FCA+APM+Environment+Performance+Agent+Implementation+Guide) 
+Unzip the binaries located at https://cawiki.ca.com/download/attachments/727271081/EPADocker.zip
+Provide necessary input under docker.properties
+Copy docker.typeviewers.xml to your Enterprise Manager (MOM) <EM_HOME>/ext/xmltv.
 
 ## Prerequisites
-*What has to be done before installing the field pack.*
+Docker Application needs to be started with -H parameter so that it can bind Docker to another host/port or a Unix socket ( both http and https ) 
+For eg.
+	 docker -d --tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem -H=0.0.0.0:2376
 
 ## Dependencies
-*APM and third party dependencies. E.g. APM agent 9.1+, SOA (web services) extension 9.1+*
-
-## Installation
-*How to install the field pack.*
+APM EPAgent version 9.7.1 and above
 
 ## Configuration
-*How to configure the field pack.*
-
+Make sure java path is set and pointing to 1.7 and above 
+Run startDockerMonitor.bat
 
 # Usage Instructions
-*How to use the field pack.*
+
 
 ## Metric description
-*Describe the metrics provided by this field pack or link to third party documentation.*
+
 
 ## Custom Management Modules
-*Dashboards, etc. included with this field pack.*
+Nothing is provided OOB
 
 ## Custom type viewers
-*Type viewers included with this field pack. Include agent and metric path that the type viewer matches against.*
-
-## Name Formatter Replacements
-*If the field pack includes name formatters cite all place holders here and what they are replaced with.*
+A custom typeview is supplied with the project. For more screenshots, look at "screenshots.docx" 
 
 ## Debugging and Troubleshooting
-*How to debug and troubleshoot the field pack.*
+
 
 ## Support
 This document and associated tools are made available from CA Technologies as examples and provided at no charge as a courtesy to the CA APM Community at large. This resource may require modification for use in your environment. However, please note that this resource is not supported by CA Technologies, and inclusion in this site should not be construed to be an endorsement or recommendation by CA Technologies. These utilities are not covered by the CA Technologies software license agreement and there is no explicit or implied warranty from CA Technologies. They can be used and distributed freely amongst the CA APM Community, but not sold. As such, they are unsupported software, provided as is without warranty of any kind, express or implied, including but not limited to warranties of merchantability and fitness for a particular purpose. CA Technologies does not warrant that this resource will meet your requirements or that the operation of the resource will be uninterrupted or error free or that any defects will be corrected. The use of this resource implies that you understand and agree to the terms listed herein.
@@ -78,4 +77,5 @@ Changes for each version of the field pack.
 
 Version | Author | Comment
 --------|--------|--------
+1.0 | Abhijit Bhadra | Added support for https
 1.0 | Abhijit Bhadra | First version of the field pack.
