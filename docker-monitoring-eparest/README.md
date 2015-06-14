@@ -18,14 +18,13 @@ Docker Server API version 1.17 and above
 ## Limitations
 No limitation
 
-## License ( To be updated )
+## License
 Apache 2.0 licenses
-
-BouncyCastle - Already approved in techstack http://techstack.ca.com/techstack-web/content/tpsr/detail.jsp?tpsrId=00000087_19
-
+BouncyCastle 
 Please review the 
 **LICENSE**
-file in this repository.  Licenses may vary by repository.  Your download and use of this software constitutes your agreement to this license.
+file in this repository
+https://github.com/bhaab01/DockerMonitoring/blob/master/docker-monitoring-eparest/LICENSE
 
 # Installation Instructions
 Install, configure and run an EPAgent on the same or a remote server. See CA APM Environment Performance Agent Implementation Guide. 
