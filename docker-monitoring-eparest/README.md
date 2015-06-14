@@ -3,7 +3,7 @@ Docker Monitoring
 
 # Description
 Docker Monitoring fieldpack allows you to monitor the docker infrastructure after providing the hostname and port number on which the docker apps are running. 
-A project overview (including description, sample screenshots, etc.) can be found on the project wiki page at https://cawiki.ca.com/display/APMFIELDPACKS/Docker+Monitoring 
+A project overview (including description, sample screenshots, etc.) can be found on the project wiki page at https://cawiki.ca.com/display/APMFIELDPACKS/Docker+Monitoring
 
 ## Releases
 From time to time, projects may make compiled releases available.  While source code is always available for complete build, releases serve as a "tag" (numbered release) and often contain prepared packages that are prebuilt and ready to use.  Visit `http://github.com/ca-apm/<repo_name>/releases` for details.
@@ -26,7 +26,7 @@ Please review the
 file in this repository.  Licenses may vary by repository.  Your download and use of this software constitutes your agreement to this license.
 
 # Installation Instructions
-Install, configure and run an EPAgent on the same or a remote server. See CA APM Environment Performance Agent Implementation Guide. (https://samlgwsm.ca.com/affwebservices/public/saml2sso?SAMLRequest=fZDLboMwEEV%2FxZo9GFBIKwuIUKNKSOkmjy66c1yHWAWbemzo55eAkOimS2t85s492e6nbUgvLSqj%0Ac4jDCIjUwnwqXedwOb8Gz7ArMuRt07HSu7s%2Bym8v0ZGR08imQQ7eamY4KmSatxKZE%2BxUvh1YEkas%0As8YZYRogJaK0bgx6MRp9K%2B1J2l4JeTkecrg71yGjdFBfKhQ8FKalXeNrpZGOWN9IRx9pQPZjvNLc%0ATRcv2GNUD9guKL%2FdBnnFOQBp56%2BNEtOvBNEAqfY5jF0rRC8rjY5rl0MSxWkQbYN4c45jFj%2BxdBsm%0Am%2FQDyPtiaGwEsw82sXYl4n8PfGkPxapjRle7ivn113TxCw%3D%3D&RelayState=%2Fdisplay%2FAPMDEVOPS97%2FCA+APM+Environment+Performance+Agent+Implementation+Guide) 
+Install, configure and run an EPAgent on the same or a remote server. See CA APM Environment Performance Agent Implementation Guide. 
 Unzip the binaries located at https://cawiki.ca.com/download/attachments/727271081/EPADocker.zip
 Provide necessary input under docker.properties
 Copy docker.typeviewers.xml to your Enterprise Manager (MOM) <EM_HOME>/ext/xmltv.
