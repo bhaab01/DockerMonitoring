@@ -6,12 +6,10 @@ import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 public class HostInfo
-    implements DockerInfo
-{
+    implements DockerInfo {
 
     /**
-     * 
-     "Containers":10, "Debug":0, "DockerRootDir":"/var/lib/docker",
+     * "Containers":10, "Debug":0, "DockerRootDir":"/var/lib/docker",
      * "Driver":"devicemapper", "DriverStatus":[ [
      * "Pool Name","docker-253:0-2624099-pool" ], [ "Pool Blocksize","65.54 kB"
      * ], [ "Backing Filesystem","extfs" ], [ "Data file", "/dev/loop0" ], [
@@ -68,15 +66,15 @@ public class HostInfo
     private HashMap<String, Comparable<?>> hostInfo;
     
     
-    public void updateContainerInfo(int a, int b, String lastUpdateTime)
-    {
-        hostInfo.put("Running Container", a);
-        hostInfo.put("Stopped Container", b);  
+    public void updateContainerInfo(int runningContainers,
+                                    int stoppedContainers,
+                                    String lastUpdateTime) {
+        hostInfo.put("Running Container", runningContainers);
+        hostInfo.put("Stopped Container", stoppedContainers);  
         hostInfo.put("Last Update Time", (String)lastUpdateTime);
     }
 
-    public void populateMetricData(HostInfo c)
-    {
+    public void populateMetricData(HostInfo c) {
         hostInfo = new HashMap<String, Comparable<?>>();
         hostInfo.put("Total Container", c.totalContainer);
         hostInfo.put("Total Images", c.totalImages);
@@ -86,12 +84,10 @@ public class HostInfo
         hostInfo.put("IndexServerAddress", c.indexServerAddress);
         hostInfo.put("KernelVersion", c.kernelVersion);
         hostInfo.put("No of CPU", c.noofcpu);
-        hostInfo.put("Total Memory", c.totalMemory/(1024*1024));
+        hostInfo.put("Total Memory", c.totalMemory / (1024 * 1024));
         
-        
-        for (int i = 0; i < driverStatus.size(); i++)
-        {
-           if (((String) driverStatus.get(i).get(0)).equals("Pool Blocksize")
+        for (int i = 0; i < driverStatus.size(); i++) {
+            if (((String) driverStatus.get(i).get(0)).equals("Pool Blocksize")
                 || ((String) driverStatus.get(i).get(0))
                         .equals("Data Space Used")
                 || ((String) driverStatus.get(i).get(0))
@@ -99,10 +95,7 @@ public class HostInfo
                 || ((String) driverStatus.get(i).get(0))
                         .equals("Metadata Space Used")
                 || ((String) driverStatus.get(i).get(0))
-                        .equals("Metadata Space Total")
-
-            )
-            {
+                        .equals("Metadata Space Total")) {
                 String value = (String) (driverStatus.get(i).get(1));
                 String[] result = value.split("\\s");
                 Integer metricVal = Math.round(Float.valueOf(result[0]));
@@ -114,8 +107,7 @@ public class HostInfo
     }
 
     @Override
-    public HashMap<String, Comparable<?>> getDockerInfo()
-    {
+    public HashMap<String, Comparable<?>> getDockerInfo() {
         // TODO Auto-generated method stub
         return hostInfo;
     }

@@ -8,19 +8,16 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-public class LoggerManager
-{
+public class LoggerManager {
     private Logger logger;
     
     
-    public Logger getLogger()
-    {
+    public Logger getLogger() {
         return logger;
     }
 
 
-    public void setLogger(Logger logger)
-    {
+    public void setLogger(Logger logger) {
         this.logger = logger;
     }
 
@@ -29,7 +26,7 @@ public class LoggerManager
         LogManager manager = LogManager.getLogManager();
 
         try {
-            if (propFile != null){
+            if (propFile != null) {
                 manager.readConfiguration(propFile);
             }
         } catch (IOException e) {

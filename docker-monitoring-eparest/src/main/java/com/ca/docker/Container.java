@@ -57,7 +57,6 @@ public class Container implements DockerInfo
     @Override
     public HashMap<String, Comparable<?>> getDockerInfo()
     {
-        // TODO Auto-generated method stub
         return containerInfo;
     }
 

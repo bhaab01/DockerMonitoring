@@ -1,9 +1,6 @@
 package com.ca.docker;
 
 import java.util.HashMap;
-import java.util.List;
-
-import com.google.gson.annotations.SerializedName;
 
 public class ContainerStatInfo
     implements DockerInfo
