@@ -1,6 +1,5 @@
 package com.ca.docker;
 
-import java.math.BigDecimal;
 /**
  * This file contains all the constants used in the application
  * @author bhaab01
